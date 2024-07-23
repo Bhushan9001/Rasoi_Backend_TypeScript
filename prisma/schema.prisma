@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  name     String
+  password String
+  recipes  Recipe[]
+  comments Comment[]
+}
+
+model Recipe {
+  id           Int          @id @default(autoincrement())
+  title        String
+  description  String       @db.Text
+  type         String
+  cuisine      String
+  instructions String[]
+  ingredients  Ingredient[]
+  imageurl     String
+  author       User         @relation(fields: [authorId], references: [id])
+  authorId     Int
+  authorName   String
+  comments     Comment[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Ingredient {
+  id       Int    @id @default(autoincrement())
+  name     String
+  quantity String
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId Int
+}
+
+model Comment {
+  id            Int       @id @default(autoincrement())
+  text          String
+  recipe        Recipe?   @relation(fields: [reicpeId], references: [id])
+  reicpeId      Int?
+  author        User      @relation(fields: [authorId], references: [id])
+  authorId      Int
+  parentId      Int?
+  parentComment Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies       Comment[] @relation("CommentReplies")
+  likes         Like[]
+  createdAt     DateTime  @default(now())
+}
+
+model Like {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId Int
+  @@unique([userId, commentId])
+}
