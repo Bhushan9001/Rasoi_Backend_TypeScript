@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use("/images",express.static(path.join(__dirname,"../images")));
 
-const PORT:number = Number(process.env.PORT);
+// const PORT:number = Number(process.env.PORT);
 
 const server = http.createServer(app);
 
@@ -34,7 +34,7 @@ app.use("/recipes",commentRoutes);
 
 
 
-server.listen(PORT,()=>{
+server.listen(8080,()=>{
     console.log("[server]:- http://localhost:8080");
 })
 
