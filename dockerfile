@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package* .
 COPY ./prisma .
 #this file aare not often changed so ideas is to chache this layer 
-ENV DATABASE_URL = "postgresql://postgres:bhushan@localhost:5432/postgres"
+ENV DATABASE_URL = " "
 RUN npm install
 # this commands are depends on the changes in package or prisma file so this layer is  also cached 
 
